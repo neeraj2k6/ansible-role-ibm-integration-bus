@@ -2,4 +2,4 @@
 - hosts: localhost
   remote_user: root
   roles:
-    - ibm-integration-bus
+  - mm0.ibm-integration-bus

@@ -1,7 +1,7 @@
 ---
 # tasks file for ibm-integration-bus
-#- name: Prerequisites
-#  include: 01-prerequisites.yml
+- name: Prerequisites
+  include: 01-prerequisites.yml
 
 - name: Configuration
   include: 02-configuration.yml

@@ -1,31 +1,39 @@
-Role Name
-=========
+mm0.ibm-integration-bus
+==
 
-A brief description of the role goes here.
+[![Build Status](https://travis-ci.org/mm0/ansible-role-ibm-integration-bus.svg?branch=master)](https://travis-ci.org/mm0/ansible-role-ibm-integration-bus) [![Galaxy](https://img.shields.io/badge/galaxy-mm0.ibm--integration--bus-blue.svg?style=flat)](https://galaxy.ansible.com/mm0/ibm-integration-bus)
+
+An Ansible role that installs IBM Websphere MQ on RHEL/Centos using locally provided installation package and License
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+- Sudo access
+- Locally (on target host) install package available and License 
 
 Role Variables
 --------------
-
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+```yaml
+unarchive_dir: /opt/IBM
+archive_dir: /mnt/nfs/ansible/ibm-iib/
+install_sub_dir: iib-10.0.0.7
+install_archive_path: "{{ archive_dir }}/10.0.0.7-IIB-LINUX64-DEVELOPER.tar.gz"
+```
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+None
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
-    - hosts: servers
+```yaml
+    - hosts: webservers
       roles:
-         - { role: username.rolename, x: 42 }
+	  - { role: mm0.ibm-integration-bus }
+```
 
 License
 -------
@@ -35,4 +43,6 @@ BSD
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+[Matt Margolin](mailto:matt.margolin@gmail.com)
+
+[mm0](https://github.com/mm0) on github
