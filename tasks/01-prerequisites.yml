@@ -1,0 +1,13 @@
+---
+
+- name: Create "{{ unarchive_dir }}"
+  file: state=directory path="{{ item }}"
+  become: yes
+  with_items:
+  - "{{ unarchive_dir }}"
+
+- name: Unpack Archives
+  unarchive: src="{{ item }}" dest="{{ unarchive_dir }}" copy=no
+  with_items:
+  - "{{ install_archive_path }}"
+  become: yes

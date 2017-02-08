@@ -1,0 +1,18 @@
+---
+
+- name: Accept License and Registry
+  shell: "{{ item }}"
+  args:
+    chdir: "{{ unarchive_dir }}/{{ install_sub_dir }}"
+  with_items:
+  - ./iib accept license silently
+  - ./iib make registry global accept license silently
+  - ./iib toolkit
+  - ./iib version
+
+
+- name: Retrieve environment
+  shell: . ./server/bin/mqsiprofile
+  args:
+    chdir: "{{ unarchive_dir }}/{{ install_sub_dir }}"
+  register: iib_environment

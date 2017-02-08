@@ -1,0 +1,16 @@
+---
+
+- name: Install package
+  yum:
+    name: "{{ item }}"
+    state: present
+  become: yes
+  with_items:
+  - unixODBC
+  - unixODBC-devel
+
+- name: Generate configuration file
+  template:
+    src: odbcinst.ini.j2
+    dest: "{{ unarchive_dir }}/{{ install_sub_dir }}/server/ODBC/unixodbc/odbcinst.ini"
+  become: yes
