@@ -6,6 +6,8 @@ archive_dir: /mnt/nfs/ansible/ibm-iib/
 install_sub_dir: iib-10.0.0.7
 install_archive_path: "{{ archive_dir }}/10.0.0.7-IIB-LINUX64-DEVELOPER.tar.gz"
 
+db2_instance_path: "/path/to"
+
 iib:
   user: iibapp
   group: iibapp

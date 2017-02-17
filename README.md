@@ -13,12 +13,20 @@ Requirements
 
 Role Variables
 --------------
-```yaml
-unarchive_dir: /opt/IBM
-archive_dir: /mnt/nfs/ansible/ibm-iib/
-install_sub_dir: iib-10.0.0.7
-install_archive_path: "{{ archive_dir }}/10.0.0.7-IIB-LINUX64-DEVELOPER.tar.gz"
-```
+
+*General variables*
+
+| Name              | Default Value       | Description          |
+|-------------------|---------------------|----------------------|
+| `environment_name` | `Dev1` | Self Explanatory |
+| `unarchive_dir` | `"/IBM/{{ environment_name }}"` | Destination |
+| `install_sub_dir` | `"iib-10.0.0.7"` | Root Dir within archive |
+| `archive_dir` | `"/mnt/nfs/ansible/ibm-iib/"` | Directory where Install archive resides |
+| `install_archive_path` | `"{{ archive_dir }}/10.0.0.7-IIB-LINUX64-DEVELOPER.tar.gz"` | Directory where Install archive resides |
+| `db2_instance_path` | `"/path/to"` | Instance Path to DB2 Driver |
+| `iib.user` | `"iibapp"` | App User |
+| `iib.group` | `"iibapp"` | App Group |
+
 
 Dependencies
 ------------
@@ -30,9 +38,9 @@ Example Playbook
 
 
 ```yaml
-    - hosts: webservers
-      roles:
-	  - { role: mm0.ibm-integration-bus }
+- hosts: webservers
+  roles:
+  - { role: mm0.ibm-integration-bus }
 ```
 
 License
