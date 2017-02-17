@@ -1,7 +1,23 @@
 ---
+- name: Create group
+  group:
+    name: "{{ iib.group }}"
+    state: present
+  become: yes
+
+- name: Create user
+  user:
+    name: "{{ iib.user }}"
+    group: "{{ iib.group }}"
+    state: present
+  become: yes
 
 - name: Create "{{ unarchive_dir }}"
-  file: state=directory path="{{ item }}"
+  file:
+    state: directory
+    path: "{{ item }}"
+    owner: "{{ iib.user }}"
+    group: "{{ iib.group }}"
   become: yes
   with_items:
   - "{{ unarchive_dir }}"

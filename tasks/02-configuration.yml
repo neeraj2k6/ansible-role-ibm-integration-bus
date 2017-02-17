@@ -9,10 +9,5 @@
   - ./iib make registry global accept license silently
   - ./iib toolkit
   - ./iib version
+  become: yes
 
-
-- name: Retrieve environment
-  shell: . ./server/bin/mqsiprofile
-  args:
-    chdir: "{{ unarchive_dir }}/{{ install_sub_dir }}"
-  register: iib_environment

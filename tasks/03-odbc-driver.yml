@@ -13,4 +13,6 @@
   template:
     src: odbcinst.ini.j2
     dest: "{{ unarchive_dir }}/{{ install_sub_dir }}/server/ODBC/unixodbc/odbcinst.ini"
+    owner: "{{ iib.user }}"
+    group: "{{ iib.group }}"
   become: yes
