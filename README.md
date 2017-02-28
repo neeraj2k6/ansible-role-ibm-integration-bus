@@ -19,11 +19,10 @@ Role Variables
 | Name              | Default Value       | Description          |
 |-------------------|---------------------|----------------------|
 | `environment_name` | `Dev1` | Self Explanatory |
-| `unarchive_dir` | `"/IBM/{{ environment_name }}"` | Destination |
-| `install_sub_dir` | `"iib-10.0.0.7"` | Root Dir within archive |
-| `archive_dir` | `"/mnt/nfs/ansible/ibm-iib/"` | Directory where Install archive resides |
-| `install_archive_path` | `"{{ archive_dir }}/10.0.0.7-IIB-LINUX64-DEVELOPER.tar.gz"` | Directory where Install archive resides |
-| `db2_instance_path` | `"/path/to"` | Instance Path to DB2 Driver |
+| `iib.unarchive_dir` | `"/IBM/{{ environment_name }}"` | Destination |
+| `iib.install_sub_dir` | `"iib-10.0.0.7"` | Root Dir within archive |
+| `iib.archive_dir` | `"/mnt/nfs/ansible/ibm-iib/"` | Directory where Install archive resides |
+| `iib_install_archive_path` | `"{{ archive_dir }}/10.0.0.7-IIB-LINUX64-DEVELOPER.tar.gz"` | Directory where Install archive resides |
 | `iib.user` | `"iibapp"` | App User |
 | `iib.group` | `"iibapp"` | App Group |
 

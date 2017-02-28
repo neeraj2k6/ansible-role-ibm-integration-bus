@@ -1,18 +1,52 @@
 ---
-- name: Create group
-  group:
-    name: "{{ iib.group }}"
+- name: "Check required directories and files exist"
+  stat: path="{{ item }}"
+  register: initial_file_check
+  with_items:
+  - "{{ iib.archive_dir }}"
+  - "{{ iib_install_archive_path }}"
+  become: yes
+
+- name: "Fail when required directories do not exist"
+  fail:
+    msg: "Required Installation File or Directory is missing: {{ item.item }}"
+  when: "{{ item.stat.exists | bool}} == false"
+  with_items: "{{ initial_file_check.results }}"
+
+- name: Install package
+  yum:
+    name: "{{ item }}"
     state: present
   become: yes
+  with_items:
+  - unixODBC
+  - unixODBC-devel
+
+- name: Create groups
+  group:
+    name: "{{ item }}"
+    state: present
+  become: yes
+  with_items:
+  - "{{ iib.group }}"
+  - mqbrkrs
 
 - name: Create user
   user:
     name: "{{ iib.user }}"
-    group: "{{ iib.group }}"
+    groups: "{{ iib.group }},mqbrkrs"
     state: present
   become: yes
 
-- name: Create "{{ unarchive_dir }}"
+- name: Prepare Bash profile
+  template:
+    dest: "/home/{{ iib.user }}/.bash_profile"
+    src: ".bash_profile.j2"
+    owner: "{{ iib.user }}"
+    group: "{{ iib.group }}"
+  become: yes
+
+- name: Create "{{ iib.unarchive_dir }}"
   file:
     state: directory
     path: "{{ item }}"
@@ -20,10 +54,16 @@
     group: "{{ iib.group }}"
   become: yes
   with_items:
-  - "{{ unarchive_dir }}"
+  - "{{ iib.unarchive_dir }}"
 
 - name: Unpack Archives
-  unarchive: src="{{ item }}" dest="{{ unarchive_dir }}" copy=no
+  unarchive:
+    src: "{{ item }}"
+    dest: "{{ iib.unarchive_dir }}"
+    copy: no
+    owner: "{{ iib.user }}"
+    group: "{{ iib.group }}"
   with_items:
-  - "{{ install_archive_path }}"
+  - "{{ iib_install_archive_path }}"
   become: yes
+

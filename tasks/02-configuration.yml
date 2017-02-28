@@ -1,13 +1,59 @@
 ---
+- name: "Update permissions"
+  file:
+    path: "{{ item }}"
+    owner: "{{ iib.user }}"
+    group: "{{ iib.group }}"
+    state: directory
+    recurse: yes
+    mode: "0770"
+  become: yes
+  with_items:
+  - "{{ iib.unarchive_dir }}"
+  - "{{ iib.unarchive_dir }}/{{ iib.install_sub_dir }}"
 
-- name: Accept License and Registry
+# There seems to be a problem with the installation process.  In order to accept the license
+# and run `./iib` commands you must source mqsiprofile, however  mqsiprofile script
+# requires license to be accepted... Workaround below
+- name: "Pretend we already accepted license in order to be able to accept license."
+  lineinfile:
+    line: "LICENSE_ACCEPTED=1"
+    regexp: "^LICENSE_ACCEPTED.*"
+    dest: "{{ iib.unarchive_dir }}/{{ iib.install_sub_dir }}/server/bin/mqsiprofile"
+  become: yes
+
+- name: "Accept License and Registry"
   shell: "{{ item }}"
   args:
-    chdir: "{{ unarchive_dir }}/{{ install_sub_dir }}"
-  with_items:
-  - ./iib accept license silently
-  - ./iib make registry global accept license silently
-  - ./iib toolkit
-  - ./iib version
+    chdir: "{{ iib.unarchive_dir }}/{{ iib.install_sub_dir }}"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ iib.unarchive_dir }}/{{ iib.install_sub_dir }}/server/bin"
   become: yes
+  with_items:
+  - ". ./server/bin/mqsiprofile && ./iib make registry global accept license silently" # Must be ran as root
+
+i- name: "Update permissions"
+  file:
+    path: "{{ item }}"
+    owner: "{{ iib.user }}"
+    group: "{{ iib.group }}"
+    state: directory
+    recurse: yes
+    mode: "0770"
+  become: yes
+  with_items:
+  - "{{ iib.unarchive_dir }}"
+  - "{{ iib.unarchive_dir }}/{{ iib.install_sub_dir }}"
+
+- name: "Accept License and Registry"
+  shell: "{{ item }}"
+  args:
+    chdir: "{{ iib.unarchive_dir }}/{{ iib.install_sub_dir }}"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ iib.unarchive_dir }}/{{ iib.install_sub_dir }}/server/bin"
+  become: yes
+  become_user: "{{ iib.user }}"
+  with_items:
+  - "./iib toolkit"
+  - ". ./server/bin/mqsiprofile && ./iib version"
 
