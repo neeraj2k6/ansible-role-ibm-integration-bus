@@ -32,7 +32,7 @@
   with_items:
   - ". ./server/bin/mqsiprofile && ./iib make registry global accept license silently" # Must be ran as root
 
-i- name: "Update permissions"
+- name: "Update permissions"
   file:
     path: "{{ item }}"
     owner: "{{ iib.user }}"

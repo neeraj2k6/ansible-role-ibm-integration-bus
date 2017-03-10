@@ -1,10 +1,93 @@
 ---
+- name: Generate configuration file 1
+  template:
+    src: odbcinst.ini.j2
+    dest: "{{ iib.unarchive_dir }}/{{ iib.install_sub_dir }}/server/ODBC/unixodbc/odbcinst.ini"
+    owner: "{{ iib.user }}"
+    group: "{{ iib.group }}"
+  become: yes
+  become_user: "{{ iib.user }}"
+
+- name: Generate configuration file 2
+  template:
+    src: odbcinst.ini.j2
+    dest: "/var/mqsi/odbcinst.ini"
+    owner: "{{ iib.user }}"
+    group: "{{ iib.group }}"
+  become: yes
+  become_user: "{{ iib.user }}"
+
+- name: Generate configuration file 3
+  template:
+    src: odbc.ini.j2
+    dest: "{{ iib.unarchive_dir }}/{{ iib.install_sub_dir }}/server/ODBC/unixodbc/odbc.ini"
+    owner: "{{ iib.user }}"
+    group: "{{ iib.group }}"
+  become: yes
+  become_user: "{{ iib.user }}"
+
+- name: Generate configuration file 4
+  template:
+    src: odbc.ini.j2
+    dest: "/var/mqsi/odbc.ini"
+    owner: "{{ iib.user }}"
+    group: "{{ iib.group }}"
+  become: yes
+  become_user: "{{ iib.user }}"
+
+- name: Create Broker
+  shell: "source {{ iib.unarchive_dir }}/{{ iib.install_sub_dir }}/server/bin/mqsiprofile ; {{ iib.unarchive_dir }}/{{ iib.install_sub_dir }}/server/bin/mqsicreatebroker {{ iib.node_name }}"
+  args:
+    chdir: "{{ iib.unarchive_dir }}/{{ iib.install_sub_dir }}/server/bin"
+
+- name: Start Broker
+  shell: "source {{ iib.unarchive_dir }}/{{ iib.install_sub_dir }}/server/bin/mqsiprofile ; {{ iib.unarchive_dir }}/{{ iib.install_sub_dir }}/server/bin/mqsistart  {{ iib.node_name }}"
+  args:
+    chdir: "{{ iib.unarchive_dir }}/{{ iib.install_sub_dir }}/server/bin"
+
+- name: Set db params
+  shell: "source {{ iib.unarchive_dir }}/{{ iib.install_sub_dir }}/server/bin/mqsiprofile ; {{ iib.unarchive_dir }}/{{ iib.install_sub_dir }}/server/bin/mqsisetdbparms {{ iib.node_name }} -n ORACLEDB -u {{ iib.oracle.user }}  -p {{ iib.oracle.password }}"
+  args:
+    chdir: "{{ iib.unarchive_dir }}/{{ iib.install_sub_dir }}/server/bin"
+
+- name: Set db params 2
+  shell: "source {{ iib.unarchive_dir }}/{{ iib.install_sub_dir }}/server/bin/mqsiprofile ; {{ iib.unarchive_dir }}/{{ iib.install_sub_dir }}/server/bin/mqsicvp {{ iib.node_name }} -n ORACLEDB "
+  args:
+    chdir: "{{ iib.unarchive_dir }}/{{ iib.install_sub_dir }}/server/bin"
+  environment:
+    ODBCINI: /var/mqsi/odbc.ini
+    ODBCSYSINI: /var/mqsi/odbcinst.ini
+
+
+#- name: Create JDBCProvider configurable service on pciibdev and pciibdev3 nodes as follow
+#  shell: mqsicreateconfigurableservice {{ iib.service_name }} -c JDBCProviders -o REFDB -n connectionUrlFormat,connectionUrlFormatAttr1,description,jarsURL,portNumber,serverName,securityIdentity,type4DatasourceClassName,type4DriverClassName -v "jdbc:oracle:thin:[user]/[password]@[serverName]:[portNumber]:[connectionUrlFormatAttr1],GWPLAODS,PolicyCenterOracleEventStoreDatabase,/iib,{{ iib.datasource_port }},{{ iib.datasource_hostname }},{{ iib.oracle_identity_name }},oracle.jdbc.xa.client.OracleXADataSource,oracle.jdbc.OracleDriver"
 #
-#- name: Generate configuration file
-#  template:
-#    src: odbcinst.ini.j2
-#    dest: "{{ iib.unarchive_dir }}/{{ iib.install_sub_dir }}/server/ODBC/unixodbc/odbcinst.ini"
-#    owner: "{{ iib.user }}"
-#    group: "{{ iib.group }}"
-#  become: yes
-#  become_user: "{{ iib.user }}"
+#- name: Associate user name and password on JDBCProvider object, REFDB, with user name and password with the following command
+#  shell: mqsisetdbparms {{ iib.service_name }} -n jdbc::{{ iib.oracle_identity_name }} -u REFERENCES -p REFERENCES
+#
+#- name: Change/alter JDBCProvider property using with the followign command
+#  shell:  mqsichangeproperties {{ iib.service_name }} -c JDBCProviders -o REFDB -n databaseSchemaNames -v REFERENCES
+#
+#- name: Get report on JDBCProvider object you have created (Property name and values) with the following command
+#  shell:  mqsireportproperties {{ iib.service_name }}  -c JDBCProviders -o DHCSSDB -r
+#
+## DB2
+#
+#- name: Create JDBCProvider configurable service on pciibdev and pciibdev3 nodes as follow
+#  shell: mqsicreateconfigurableservice {{ iib.service_name }} -c JDBCProviders -o DHCSSDB -n connectionUrlFormat,description,databaseName,databaseType,databaseVersion,jarsURL,portNumber,serverName,securityIdentity,type4DatasourceClassName,type4DriverClassName -v "jdbc:db2://[serverName]:[portNumber]/[databaseName]:user=[user];password=[password];,PCDB2Database,ODSDEV,UDB,10.0.5,/iib,{{ iib.db2_port }},faadbcdt0027,{{ iib.db2_identity_name }},com.ibm.db2.jcc.DB2XADataSource,com.ibm.db2.jcc.DB2Driver"
+#
+#- name: Associate user name and password on JDBCProvider object, REFDB, with user name and password with the following command
+#  shell: mqsisetdbparms {{ iib.service_name }} -n jdbc::{{ iib.db2_identity_name }} -u REFERENCES -p REFERENCES
+#
+#- name: Change/alter JDBCProvider property using with the followign command
+#  shell:  mqsichangeproperties {{ iib.service_name }} -c JDBCProviders -o DHCSSDB -p {{ iib.db2_password }}
+#
+#- name: Get report on JDBCProvider object you have created (Property name and values) with the following command
+#  shell:  mqsireportproperties {{ iib.service_name }}  -c JDBCProviders -o DHCSSDB -r
+#
+#
+#- name: Associate DSN name, userName and ID with broker
+#  shell:  mqsisetdbparms {{ iib.service_name }} -n DSHUBDB -u DSHUBDEV3 -p DSHUBDEV3
+#
+#- name: Test connection
+#  shell:  mqsicvp {{ iib.service_name }} -n DSHUBDB

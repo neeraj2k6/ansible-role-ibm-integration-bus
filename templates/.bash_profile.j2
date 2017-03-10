@@ -11,6 +11,7 @@ export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
 export LD_LIBRARY_PATH="/usr/lib64:/usr/lib:/lib64:/lib:${LD_LIBRARY_PATH}:{{ iib.unarchive_dir }}/{{ iib.install_sub_dir }}:."
-
+export ODBCSYSINI=/var/mqsi/odbcinst.ini
+export ODBCINI=/var/mqsi/odbc.ini
 export PATH="${JAVA_HOME}/jre/bin:${ORACLE_HOME}/bin:${ODBCHOME}/bin:/usr/local/bin:/bin:/usr/bin:${PATH}:."
 
