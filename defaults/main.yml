@@ -6,7 +6,7 @@ iib:
   user: iibapp
   group: iibapp
   install_sub_dir: iib-10.0.0.7
-  archive_dir: /mnt/nfs/ansible/ibm-iib/
+  archive_dir: /opt/ansible/ibm-iib/
   unarchive_dir: "/opt/IBM/{{ environment_name }}"
   service_name: "GWPLA{{ environment_name }}"
   datasource_port: 1521
@@ -19,5 +19,5 @@ iib:
   oracle:
     user: user
     password: password
-iib_install_archive_path: "{{ iib.archive_dir }}/10.0.0.7-IIB-LINUX64-DEVELOPER.tar.gz"
+iib_install_archive_path: "{{ iib.archive_dir }}/10.0.0.17-IIB-LINUX64-DEVELOPER.tar.gz"
 
