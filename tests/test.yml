@@ -1,5 +1,5 @@
 ---
 - hosts: localhost
-  remote_user: root
+  remote_user: iibapp
   roles:
   - mm0.ibm-integration-bus

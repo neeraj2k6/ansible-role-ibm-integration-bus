@@ -1,6 +1,6 @@
 ---
 # defaults file for ibm-integration-bus
-environment_name: dev1
+environment_name: dev
 
 iib:
   user: iibapp
@@ -15,9 +15,9 @@ iib:
   db2_identity_name: db2SecurityIdentity
   db2_port: 60020
   db2_password: 12345
-  node_name: IB9NODE
+  node_name: IB10NODE
   oracle:
     user: user
     password: password
-iib_install_archive_path: "{{ iib.archive_dir }}/10.0.0.17-IIB-LINUX64-DEVELOPER.tar.gz"
+iib_install_archive_path: "{{ iib.archive_dir }}10.0.0.17-IIB-LINUX64-DEVELOPER.tar.gz"
 
